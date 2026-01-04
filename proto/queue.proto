@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package queue;
+
+option go_package = "github.com/turnertastic1/boltq/pkg/queuepb";
+
+service QueueService {
+  rpc EnqueueJob (EnqueueJobRequest) returns (EnqueueJobResponse);
+}
+
+message EnqueueJobRequest {
+  string type = 1;
+  bytes payload = 2;
+}
+
+message EnqueueJobResponse {
+  string job_id = 1;
+}
