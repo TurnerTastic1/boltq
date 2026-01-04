@@ -4,12 +4,17 @@ package queue;
 
 option go_package = "github.com/turnertastic1/boltq/pkg/queuepb";
 
+enum JobType {
+  JOB_TYPE_UNSPECIFIED = 0;
+  JOB_TYPE_WEBHOOK_DELIVERY = 1;
+}
+
 service QueueService {
   rpc EnqueueJob (EnqueueJobRequest) returns (EnqueueJobResponse);
 }
 
 message EnqueueJobRequest {
-  string type = 1;
+  JobType type = 1;
   bytes payload = 2;
 }
 

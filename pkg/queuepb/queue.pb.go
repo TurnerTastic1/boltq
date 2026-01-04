@@ -21,9 +21,55 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type JobType int32
+
+const (
+	JobType_JOB_TYPE_UNSPECIFIED      JobType = 0
+	JobType_JOB_TYPE_WEBHOOK_DELIVERY JobType = 1
+)
+
+// Enum value maps for JobType.
+var (
+	JobType_name = map[int32]string{
+		0: "JOB_TYPE_UNSPECIFIED",
+		1: "JOB_TYPE_WEBHOOK_DELIVERY",
+	}
+	JobType_value = map[string]int32{
+		"JOB_TYPE_UNSPECIFIED":      0,
+		"JOB_TYPE_WEBHOOK_DELIVERY": 1,
+	}
+)
+
+func (x JobType) Enum() *JobType {
+	p := new(JobType)
+	*p = x
+	return p
+}
+
+func (x JobType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (JobType) Descriptor() protoreflect.EnumDescriptor {
+	return file_proto_queue_proto_enumTypes[0].Descriptor()
+}
+
+func (JobType) Type() protoreflect.EnumType {
+	return &file_proto_queue_proto_enumTypes[0]
+}
+
+func (x JobType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use JobType.Descriptor instead.
+func (JobType) EnumDescriptor() ([]byte, []int) {
+	return file_proto_queue_proto_rawDescGZIP(), []int{0}
+}
+
 type EnqueueJobRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Type          JobType                `protobuf:"varint,1,opt,name=type,proto3,enum=queue.JobType" json:"type,omitempty"`
 	Payload       []byte                 `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -59,11 +105,11 @@ func (*EnqueueJobRequest) Descriptor() ([]byte, []int) {
 	return file_proto_queue_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *EnqueueJobRequest) GetType() string {
+func (x *EnqueueJobRequest) GetType() JobType {
 	if x != nil {
 		return x.Type
 	}
-	return ""
+	return JobType_JOB_TYPE_UNSPECIFIED
 }
 
 func (x *EnqueueJobRequest) GetPayload() []byte {
@@ -121,12 +167,15 @@ var File_proto_queue_proto protoreflect.FileDescriptor
 
 const file_proto_queue_proto_rawDesc = "" +
 	"\n" +
-	"\x11proto/queue.proto\x12\x05queue\"A\n" +
-	"\x11EnqueueJobRequest\x12\x12\n" +
-	"\x04type\x18\x01 \x01(\tR\x04type\x12\x18\n" +
+	"\x11proto/queue.proto\x12\x05queue\"Q\n" +
+	"\x11EnqueueJobRequest\x12\"\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x0e.queue.JobTypeR\x04type\x12\x18\n" +
 	"\apayload\x18\x02 \x01(\fR\apayload\"+\n" +
 	"\x12EnqueueJobResponse\x12\x15\n" +
-	"\x06job_id\x18\x01 \x01(\tR\x05jobId2Q\n" +
+	"\x06job_id\x18\x01 \x01(\tR\x05jobId*B\n" +
+	"\aJobType\x12\x18\n" +
+	"\x14JOB_TYPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
+	"\x19JOB_TYPE_WEBHOOK_DELIVERY\x10\x012Q\n" +
 	"\fQueueService\x12A\n" +
 	"\n" +
 	"EnqueueJob\x12\x18.queue.EnqueueJobRequest\x1a\x19.queue.EnqueueJobResponseB,Z*github.com/turnertastic1/boltq/pkg/queuepbb\x06proto3"
@@ -143,19 +192,22 @@ func file_proto_queue_proto_rawDescGZIP() []byte {
 	return file_proto_queue_proto_rawDescData
 }
 
+var file_proto_queue_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_proto_queue_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_queue_proto_goTypes = []any{
-	(*EnqueueJobRequest)(nil),  // 0: queue.EnqueueJobRequest
-	(*EnqueueJobResponse)(nil), // 1: queue.EnqueueJobResponse
+	(JobType)(0),               // 0: queue.JobType
+	(*EnqueueJobRequest)(nil),  // 1: queue.EnqueueJobRequest
+	(*EnqueueJobResponse)(nil), // 2: queue.EnqueueJobResponse
 }
 var file_proto_queue_proto_depIdxs = []int32{
-	0, // 0: queue.QueueService.EnqueueJob:input_type -> queue.EnqueueJobRequest
-	1, // 1: queue.QueueService.EnqueueJob:output_type -> queue.EnqueueJobResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: queue.EnqueueJobRequest.type:type_name -> queue.JobType
+	1, // 1: queue.QueueService.EnqueueJob:input_type -> queue.EnqueueJobRequest
+	2, // 2: queue.QueueService.EnqueueJob:output_type -> queue.EnqueueJobResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_proto_queue_proto_init() }
@@ -168,13 +220,14 @@ func file_proto_queue_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_queue_proto_rawDesc), len(file_proto_queue_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_proto_queue_proto_goTypes,
 		DependencyIndexes: file_proto_queue_proto_depIdxs,
+		EnumInfos:         file_proto_queue_proto_enumTypes,
 		MessageInfos:      file_proto_queue_proto_msgTypes,
 	}.Build()
 	File_proto_queue_proto = out.File
