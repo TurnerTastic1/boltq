@@ -17,7 +17,7 @@ test-all:
 test-all-verbose:
 	go test -v ./internal/...
 
-.PHONY: docker-build docker-up docker-up-headless docker-down docker-logs docker-restart docker-shell
+.PHONY: docker-build docker-up docker-up-headless docker-down docker-logs docker-restart docker-shell docker-shell-postgres docker-shell-redis docker-ps
 docker-build:
 	docker-compose build
 
@@ -39,6 +39,15 @@ docker-restart:
 docker-shell:
 	docker-compose exec queue-svc sh
 
+docker-shell-postgres:
+	docker-compose exec postgres psql -U boltq -d boltq
+
+docker-shell-redis:
+	docker-compose exec redis redis-cli
+
+docker-ps:
+	docker-compose ps
+
 .PHONY: help
 help:
 	@echo "Available targets:"
@@ -56,3 +65,6 @@ help:
 	@echo "  docker-logs    - View logs from Docker containers"
 	@echo "  docker-restart - Restart Docker containers"
 	@echo "  docker-shell   - Open a shell in the queue-svc container"
+	@echo "  docker-shell-postgres - Open a psql shell in the postgres container"
+	@echo "  docker-shell-redis - Open a redis-cli shell in the redis container"
+	@echo "  docker-ps      - List running Docker containers"
