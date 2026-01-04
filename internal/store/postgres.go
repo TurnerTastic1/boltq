@@ -77,3 +77,63 @@ func (ps *PostgresStore) GetJobByID(ctx context.Context, id uuid.UUID) (*Job, er
 
 	return job, nil
 }
+
+func (ps *PostgresStore) MarkJobAsQueued(ctx context.Context, id uuid.UUID) error {
+	query := `
+		UPDATE jobs
+		SET status = $1, started_at = NULL, completed_at = NULL
+		WHERE id = $2
+	`
+
+	_, err := ps.db.ExecContext(ctx, query, JobStatusQueued, id)
+	if err != nil {
+		return fmt.Errorf("failed to mark job as queued: %w", err)
+	}
+
+	return nil
+}
+
+func (ps *PostgresStore) MarkJobAsProcessing(ctx context.Context, id uuid.UUID) error {
+	query := `
+		UPDATE jobs
+		SET status = $1, started_at = NOW()
+		WHERE id = $2
+	`
+
+	_, err := ps.db.ExecContext(ctx, query, JobStatusProcessing, id)
+	if err != nil {
+		return fmt.Errorf("failed to mark job as processing: %w", err)
+	}
+
+	return nil
+}
+
+func (ps *PostgresStore) MarkJobAsCompleted(ctx context.Context, id uuid.UUID) error {
+	query := `
+		UPDATE jobs
+		SET status = $1, completed_at = NOW()
+		WHERE id = $2
+	`
+
+	_, err := ps.db.ExecContext(ctx, query, JobStatusCompleted, id)
+	if err != nil {
+		return fmt.Errorf("failed to mark job as completed: %w", err)
+	}
+
+	return nil
+}
+
+func (ps *PostgresStore) MarkJobAsFailed(ctx context.Context, id uuid.UUID) error {
+	query := `
+		UPDATE jobs
+		SET status = $1, completed_at = NOW()
+		WHERE id = $2
+	`
+
+	_, err := ps.db.ExecContext(ctx, query, JobStatusFailed, id)
+	if err != nil {
+		return fmt.Errorf("failed to mark job as failed: %w", err)
+	}
+
+	return nil
+}

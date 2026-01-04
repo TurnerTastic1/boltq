@@ -9,11 +9,6 @@ CREATE TABLE IF NOT EXISTS jobs (
     completed_at TIMESTAMP
 );
 
--- Create index on status for efficient queries
 CREATE INDEX idx_jobs_status ON jobs(status);
 
--- Create index on created_at for sorting
 CREATE INDEX idx_jobs_created_at ON jobs(created_at DESC);
-
--- Create index for finding stale jobs
-CREATE INDEX idx_jobs_stale ON jobs(status, updated_at) WHERE status = 'processing';
