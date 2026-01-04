@@ -17,7 +17,7 @@ test-all:
 test-all-verbose:
 	go test -v ./internal/...
 
-.PHONY: docker-build docker-up docker-up-headless docker-down docker-logs docker-restart docker-shell docker-shell-postgres docker-shell-redis docker-ps
+.PHONY: docker-build docker-up docker-up-headless docker-down docker-down-volumes docker-logs docker-restart docker-shell docker-shell-postgres docker-shell-redis docker-ps
 docker-build:
 	docker-compose build
 
@@ -29,6 +29,9 @@ docker-up-headless:
 
 docker-down:
 	docker-compose down
+
+docker-down-volumes:
+	docker-compose down -v
 
 docker-logs:
 	docker-compose logs -f
@@ -62,6 +65,7 @@ help:
 	@echo "  docker-up      - Start Docker containers"
 	@echo "  docker-up-headless - Start Docker containers in detached mode"
 	@echo "  docker-down    - Stop Docker containers"
+	@echo "  docker-down-volumes - Stop Docker containers and remove volumes"
 	@echo "  docker-logs    - View logs from Docker containers"
 	@echo "  docker-restart - Restart Docker containers"
 	@echo "  docker-shell   - Open a shell in the queue-svc container"

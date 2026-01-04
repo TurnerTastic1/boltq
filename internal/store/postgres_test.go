@@ -11,13 +11,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Test CreateJob separately
 func TestPostgresStore_CreateJob(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	assert.NoError(t, err)
 	defer db.Close()
 
-	store := &PostgresStore{db: db}
+	store := NewPostgresStore(db)
 	ctx := context.Background()
 
 	jobID := uuid.New()
@@ -45,7 +44,7 @@ func TestPostgresStore_GetJobByID(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	store := &PostgresStore{db: db}
+	store := NewPostgresStore(db)
 	ctx := context.Background()
 
 	jobID := uuid.New()
@@ -86,7 +85,7 @@ func TestPostgresStore_GetJobByID_NotFound(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	store := &PostgresStore{db: db}
+	store := NewPostgresStore(db)
 	ctx := context.Background()
 
 	jobID := uuid.New()
@@ -108,7 +107,7 @@ func TestPostgresStore_MarkJobAsQueued(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	store := &PostgresStore{db: db}
+	store := NewPostgresStore(db)
 	ctx := context.Background()
 	jobID := uuid.New()
 
@@ -127,7 +126,7 @@ func TestPostgresStore_MarkJobAsProcessing(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	store := &PostgresStore{db: db}
+	store := NewPostgresStore(db)
 	ctx := context.Background()
 	jobID := uuid.New()
 
@@ -146,7 +145,7 @@ func TestPostgresStore_MarkJobAsCompleted(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	store := &PostgresStore{db: db}
+	store := NewPostgresStore(db)
 	ctx := context.Background()
 	jobID := uuid.New()
 
@@ -165,7 +164,7 @@ func TestPostgresStore_MarkJobAsFailed(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	store := &PostgresStore{db: db}
+	store := NewPostgresStore(db)
 	ctx := context.Background()
 	jobID := uuid.New()
 
