@@ -1,0 +1,17 @@
+services:
+  queue-svc:
+    build:
+      context: .
+      dockerfile: Dockerfile.queue-svc
+    container_name: boltq-queue-svc
+    ports:
+      - "50051:50051"
+    environment:
+      - LOG_LEVEL=debug
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "localhost", "50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
