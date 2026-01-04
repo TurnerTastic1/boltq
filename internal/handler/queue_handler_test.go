@@ -14,7 +14,7 @@ func TestEnqueueJob(t *testing.T) {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}))
-	handler := &QueueHandler{logger: logger}
+	handler := NewQueueHandler(logger)
 
 	req := &queuepb.EnqueueJobRequest{
 		Type:    "webhook.delivery",
