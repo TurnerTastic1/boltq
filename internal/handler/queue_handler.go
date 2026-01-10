@@ -64,3 +64,7 @@ func (h *QueueHandler) EnqueueJob(ctx context.Context, req *queuepb.EnqueueJobRe
 		JobId: jobId.String(),
 	}, nil
 }
+
+func (h *QueueHandler) GetJobStatus(ctx context.Context, req *queuepb.GetJobStatusRequest) (*queuepb.GetJobStatusResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetJobStatus not implemented")
+}

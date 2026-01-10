@@ -163,6 +163,102 @@ func (x *EnqueueJobResponse) GetJobId() string {
 	return ""
 }
 
+type GetJobStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobId         string                 `protobuf:"bytes,1,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetJobStatusRequest) Reset() {
+	*x = GetJobStatusRequest{}
+	mi := &file_proto_queue_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetJobStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetJobStatusRequest) ProtoMessage() {}
+
+func (x *GetJobStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_queue_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetJobStatusRequest.ProtoReflect.Descriptor instead.
+func (*GetJobStatusRequest) Descriptor() ([]byte, []int) {
+	return file_proto_queue_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetJobStatusRequest) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+type GetJobStatusResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobId         string                 `protobuf:"bytes,1,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetJobStatusResponse) Reset() {
+	*x = GetJobStatusResponse{}
+	mi := &file_proto_queue_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetJobStatusResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetJobStatusResponse) ProtoMessage() {}
+
+func (x *GetJobStatusResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_queue_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetJobStatusResponse.ProtoReflect.Descriptor instead.
+func (*GetJobStatusResponse) Descriptor() ([]byte, []int) {
+	return file_proto_queue_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetJobStatusResponse) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+func (x *GetJobStatusResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 var File_proto_queue_proto protoreflect.FileDescriptor
 
 const file_proto_queue_proto_rawDesc = "" +
@@ -172,13 +268,19 @@ const file_proto_queue_proto_rawDesc = "" +
 	"\x04type\x18\x01 \x01(\x0e2\x0e.queue.JobTypeR\x04type\x12\x18\n" +
 	"\apayload\x18\x02 \x01(\fR\apayload\"+\n" +
 	"\x12EnqueueJobResponse\x12\x15\n" +
-	"\x06job_id\x18\x01 \x01(\tR\x05jobId*B\n" +
+	"\x06job_id\x18\x01 \x01(\tR\x05jobId\",\n" +
+	"\x13GetJobStatusRequest\x12\x15\n" +
+	"\x06job_id\x18\x01 \x01(\tR\x05jobId\"E\n" +
+	"\x14GetJobStatusResponse\x12\x15\n" +
+	"\x06job_id\x18\x01 \x01(\tR\x05jobId\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status*B\n" +
 	"\aJobType\x12\x18\n" +
 	"\x14JOB_TYPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19JOB_TYPE_WEBHOOK_DELIVERY\x10\x012Q\n" +
+	"\x19JOB_TYPE_WEBHOOK_DELIVERY\x10\x012\x9a\x01\n" +
 	"\fQueueService\x12A\n" +
 	"\n" +
-	"EnqueueJob\x12\x18.queue.EnqueueJobRequest\x1a\x19.queue.EnqueueJobResponseB,Z*github.com/turnertastic1/boltq/pkg/queuepbb\x06proto3"
+	"EnqueueJob\x12\x18.queue.EnqueueJobRequest\x1a\x19.queue.EnqueueJobResponse\x12G\n" +
+	"\fGetJobStatus\x12\x1a.queue.GetJobStatusRequest\x1a\x1b.queue.GetJobStatusResponseB,Z*github.com/turnertastic1/boltq/pkg/queuepbb\x06proto3"
 
 var (
 	file_proto_queue_proto_rawDescOnce sync.Once
@@ -193,18 +295,22 @@ func file_proto_queue_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_queue_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_proto_queue_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_queue_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_queue_proto_goTypes = []any{
-	(JobType)(0),               // 0: queue.JobType
-	(*EnqueueJobRequest)(nil),  // 1: queue.EnqueueJobRequest
-	(*EnqueueJobResponse)(nil), // 2: queue.EnqueueJobResponse
+	(JobType)(0),                 // 0: queue.JobType
+	(*EnqueueJobRequest)(nil),    // 1: queue.EnqueueJobRequest
+	(*EnqueueJobResponse)(nil),   // 2: queue.EnqueueJobResponse
+	(*GetJobStatusRequest)(nil),  // 3: queue.GetJobStatusRequest
+	(*GetJobStatusResponse)(nil), // 4: queue.GetJobStatusResponse
 }
 var file_proto_queue_proto_depIdxs = []int32{
 	0, // 0: queue.EnqueueJobRequest.type:type_name -> queue.JobType
 	1, // 1: queue.QueueService.EnqueueJob:input_type -> queue.EnqueueJobRequest
-	2, // 2: queue.QueueService.EnqueueJob:output_type -> queue.EnqueueJobResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
+	3, // 2: queue.QueueService.GetJobStatus:input_type -> queue.GetJobStatusRequest
+	2, // 3: queue.QueueService.EnqueueJob:output_type -> queue.EnqueueJobResponse
+	4, // 4: queue.QueueService.GetJobStatus:output_type -> queue.GetJobStatusResponse
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -221,7 +327,7 @@ func file_proto_queue_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_queue_proto_rawDesc), len(file_proto_queue_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

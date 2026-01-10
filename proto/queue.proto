@@ -11,6 +11,7 @@ enum JobType {
 
 service QueueService {
   rpc EnqueueJob (EnqueueJobRequest) returns (EnqueueJobResponse);
+  rpc GetJobStatus (GetJobStatusRequest) returns (GetJobStatusResponse);
 }
 
 message EnqueueJobRequest {
@@ -20,4 +21,13 @@ message EnqueueJobRequest {
 
 message EnqueueJobResponse {
   string job_id = 1;
+}
+
+message GetJobStatusRequest {
+  string job_id = 1;
+}
+
+message GetJobStatusResponse {
+  string job_id = 1;
+  string status = 2;
 }
