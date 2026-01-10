@@ -12,6 +12,7 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/turnertastic1/boltq/internal/handler"
+	"github.com/turnertastic1/boltq/internal/queue"
 	"github.com/turnertastic1/boltq/internal/store"
 	"github.com/turnertastic1/boltq/pkg/queuepb"
 	"google.golang.org/grpc"
@@ -38,7 +39,7 @@ func main() {
 
 	logger.Info("Connecting to Postgres", "connString", connString)
 
-	// Create database connection
+	// Connect to Postgres
 	db, err := sql.Open("postgres", connString)
 	if err != nil {
 		logger.Error("Failed to open database connection", "error", err)
@@ -46,21 +47,35 @@ func main() {
 	}
 	defer db.Close()
 
-	// Test connection
 	if err := db.Ping(); err != nil {
 		logger.Error("Failed to ping database", "error", err)
 		os.Exit(1)
 	}
 
-	// Configure connection pool
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(5)
 	db.SetConnMaxLifetime(5 * time.Minute)
 
+	logger.Info("Connected to Postgres successfully")
+
 	pgStore := store.NewPostgresStore(db)
 	defer pgStore.Close()
 
-	logger.Info("Connected to Postgres successfully")
+	// Connect to Redis
+	redisAddr := getEnv("REDIS_ADDR", "localhost:6379")
+	redisPassword := getEnv("REDIS_PASSWORD", "")
+	redisDB := 0 // Default DB
+
+	logger.Info("Connecting to Redis", "addr", redisAddr)
+
+	redisQueue, err := queue.NewRedisQueue(redisAddr, redisPassword, redisDB)
+	if err != nil {
+		logger.Error("Failed to connect to Redis", "error", err)
+		os.Exit(1)
+	}
+	defer redisQueue.Close()
+
+	logger.Info("Connected to Redis successfully")
 
 	// Start gRPC server
 	lis, err := net.Listen("tcp", ":50051")
@@ -71,7 +86,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	queueHandler := handler.NewQueueHandler(logger, pgStore)
+	queueHandler := handler.NewQueueHandler(logger, pgStore, redisQueue)
 	queuepb.RegisterQueueServiceServer(grpcServer, queueHandler)
 
 	reflection.Register(grpcServer)

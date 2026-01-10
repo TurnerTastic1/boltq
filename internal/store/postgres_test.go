@@ -23,12 +23,12 @@ func TestPostgresStore_CreateJob(t *testing.T) {
 
 	// Only mock the INSERT
 	mock.ExpectExec("INSERT INTO jobs").
-		WithArgs(jobID, "webhook.delivery", []byte("test payload"), JobStatusQueued).
+		WithArgs(jobID, "job.standard", []byte("test payload"), JobStatusQueued).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	job := &Job{
 		ID:      jobID,
-		Type:    "webhook.delivery",
+		Type:    "job.standard",
 		Payload: []byte("test payload"),
 		Status:  JobStatusQueued,
 	}
@@ -55,7 +55,7 @@ func TestPostgresStore_GetJobByID(t *testing.T) {
 		"id", "type", "payload", "status", "created_at", "started_at", "completed_at",
 	}).AddRow(
 		jobID,
-		"webhook.delivery",
+		"job.standard",
 		[]byte("test payload"),
 		JobStatusQueued,
 		now,
@@ -72,7 +72,7 @@ func TestPostgresStore_GetJobByID(t *testing.T) {
 	assert.NotNil(t, retrieved)
 
 	assert.Equal(t, jobID, retrieved.ID)
-	assert.Equal(t, "webhook.delivery", retrieved.Type)
+	assert.Equal(t, "job.standard", retrieved.Type)
 	assert.Equal(t, []byte("test payload"), retrieved.Payload)
 	assert.Equal(t, JobStatusQueued, retrieved.Status)
 	assert.NotZero(t, retrieved.CreatedAt)

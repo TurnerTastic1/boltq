@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/google/uuid"
+	"github.com/turnertastic1/boltq/internal/queue"
 	"github.com/turnertastic1/boltq/internal/store"
 	"github.com/turnertastic1/boltq/pkg/queuepb"
 	"google.golang.org/grpc/codes"
@@ -15,12 +16,14 @@ type QueueHandler struct {
 	queuepb.UnimplementedQueueServiceServer
 	logger *slog.Logger
 	store  *store.PostgresStore
+	queue  *queue.RedisQueue
 }
 
-func NewQueueHandler(logger *slog.Logger, store *store.PostgresStore) *QueueHandler {
+func NewQueueHandler(l *slog.Logger, s *store.PostgresStore, q *queue.RedisQueue) *QueueHandler {
 	return &QueueHandler{
-		logger: logger,
-		store:  store,
+		logger: l,
+		store:  s,
+		queue:  q,
 	}
 }
 
@@ -45,16 +48,25 @@ func (h *QueueHandler) EnqueueJob(ctx context.Context, req *queuepb.EnqueueJobRe
 	h.logger.Info("Received EnqueueJob request", "type", req.GetType(), "payload_size", len(req.GetPayload()))
 
 	jobId := uuid.New()
+	jobType := req.GetType().String()
 
+	// 1. Save job to Postgres (persistent store)
 	job := &store.Job{
 		ID:      jobId,
-		Type:    req.GetType().String(),
+		Type:    jobType,
 		Payload: req.GetPayload(),
 		Status:  store.JobStatusQueued,
 	}
 
 	if err := h.store.CreateJob(ctx, job); err != nil {
 		h.logger.Error("Failed to create job in store", "error", err)
+		return nil, status.Error(codes.Internal, "failed to enqueue job")
+	}
+
+	// 2. Add job reference to Redis queue
+	if err := h.queue.Enqueue(ctx, jobId, jobType); err != nil {
+		h.logger.Error("Failed to enqueue job to Redis", "error", err, "job_id", jobId.String())
+		// TODO: Consider rolling back the job creation in Postgres here.
 		return nil, status.Error(codes.Internal, "failed to enqueue job")
 	}
 

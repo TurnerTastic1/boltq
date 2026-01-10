@@ -24,19 +24,19 @@ const (
 type JobType int32
 
 const (
-	JobType_JOB_TYPE_UNSPECIFIED      JobType = 0
-	JobType_JOB_TYPE_WEBHOOK_DELIVERY JobType = 1
+	JobType_JOB_TYPE_UNSPECIFIED JobType = 0
+	JobType_JOB_STANDARD         JobType = 1
 )
 
 // Enum value maps for JobType.
 var (
 	JobType_name = map[int32]string{
 		0: "JOB_TYPE_UNSPECIFIED",
-		1: "JOB_TYPE_WEBHOOK_DELIVERY",
+		1: "JOB_STANDARD",
 	}
 	JobType_value = map[string]int32{
-		"JOB_TYPE_UNSPECIFIED":      0,
-		"JOB_TYPE_WEBHOOK_DELIVERY": 1,
+		"JOB_TYPE_UNSPECIFIED": 0,
+		"JOB_STANDARD":         1,
 	}
 )
 
@@ -273,10 +273,10 @@ const file_proto_queue_proto_rawDesc = "" +
 	"\x06job_id\x18\x01 \x01(\tR\x05jobId\"E\n" +
 	"\x14GetJobStatusResponse\x12\x15\n" +
 	"\x06job_id\x18\x01 \x01(\tR\x05jobId\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status*B\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status*5\n" +
 	"\aJobType\x12\x18\n" +
-	"\x14JOB_TYPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19JOB_TYPE_WEBHOOK_DELIVERY\x10\x012\x9a\x01\n" +
+	"\x14JOB_TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
+	"\fJOB_STANDARD\x10\x012\x9a\x01\n" +
 	"\fQueueService\x12A\n" +
 	"\n" +
 	"EnqueueJob\x12\x18.queue.EnqueueJobRequest\x1a\x19.queue.EnqueueJobResponse\x12G\n" +
